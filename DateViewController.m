@@ -77,13 +77,13 @@
     NSDate *beginningOfWeek = [gregorian dateByAddingComponents:componentsToSubtract toDate:today options:0];
     
     
-    [componentsToSubtract release];
+    //[componentsToSubtract release];
     //format date
     NSDateFormatter *f = [[NSDateFormatter alloc] init];
     [f setDateFormat:@"MM_dd_yyyy"];//format to the CampusDish URL
     NSString *date = [f stringFromDate: beginningOfWeek];//get date string for Sunday
     
-    [f release];
+    //[f release];
     //[super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     /*self.navigationItem.leftBarButtonItem = self.editButtonItem;
@@ -102,7 +102,7 @@
     NSInteger weekday = [weekdayComponents weekday];
     // weekday 1 = Sunday for Gregorian calendar
     
-    [gregorian release];
+    //[gregorian release];
     
     //populate breakfast items array.
     NSMutableArray *arrTemp1 = [[NSMutableArray alloc] init];
@@ -223,14 +223,14 @@
     
     //set dictionary with created dictionary
     self.tableContents =temp;
-    [temp release];
+    //[temp release];
     
     //alloc keys
     self.sortedKeys = [[NSArray alloc] initWithObjects: @"Breakfast",@"Lunch",@"Dinner", nil];
     
-    [arrTemp1 release];
-    [arrTemp2 release];
-    [arrTemp3 release];
+    //[arrTemp1 release];
+    //[arrTemp2 release];
+    //[arrTemp3 release];
 
 }
 
@@ -282,7 +282,7 @@ titleForHeaderInSection:(NSInteger)section
     UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: @"DateCell"];//Identifier from UIBuilder
     
     if(cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DateCell"] autorelease];//create cell to be rendered
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DateCell"];//create cell to be rendered
          
     }
     
@@ -352,7 +352,7 @@ titleForHeaderInSection:(NSInteger)section
 
 /*
  Dealloc member variables
- */
+ 
 - (void)dealloc
 {
     [_datePicker release];
@@ -365,4 +365,5 @@ titleForHeaderInSection:(NSInteger)section
     //[_objects release];
     [super dealloc];
 }
+*/
 @end

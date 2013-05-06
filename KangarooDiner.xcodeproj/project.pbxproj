@@ -323,7 +323,7 @@
 		8D052BAE16431541005B0FC0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KangarooDiner/KangarooDiner-Prefix.pch";
 				INFOPLIST_FILE = "KangarooDiner/KangarooDiner-Info.plist";
@@ -337,7 +337,7 @@
 		8D052BAF16431541005B0FC0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KangarooDiner/KangarooDiner-Prefix.pch";
 				INFOPLIST_FILE = "KangarooDiner/KangarooDiner-Info.plist";

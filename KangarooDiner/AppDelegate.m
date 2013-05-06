@@ -9,13 +9,13 @@
 #import "AppDelegate.h"
 
 @implementation AppDelegate
-
+/*
 - (void)dealloc
 {
     [_window release];
     [super dealloc];
 }
-
+*/
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.

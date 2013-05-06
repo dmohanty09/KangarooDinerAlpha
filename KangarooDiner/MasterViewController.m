@@ -47,12 +47,16 @@
     [super awakeFromNib];
     
     todayMain = [[NSDate alloc] init];//todays date is set
+    
+    //NSLog(@"hello");
 }
 
 //set the dictionary when viewDidLoad
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //NSLog([todayMain description]);
     
     [self setDictionary: todayMain];//calls method to fill dictionary with Menu Items
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
@@ -79,7 +83,7 @@
     NSDate *lunchTime = [gregorianTime dateFromComponents: components2];
     NSDate *dinnerTime = [gregorianTime dateFromComponents: components3];
     
-    [gregorianTime release];
+    //[gregorianTime release];
     
     //if its after dinner, show tomorrows menu
     if([today laterDate:dinnerTime]==today){
@@ -107,13 +111,13 @@
     NSDate *beginningOfWeek = [gregorian dateByAddingComponents:componentsToSubtract toDate:today options:0];
     
     
-    [componentsToSubtract release];
+    //[componentsToSubtract release];
     //format date
     NSDateFormatter *f = [[NSDateFormatter alloc] init];
     [f setDateFormat:@"MM_dd_yyyy"];//format the date to the way it is on the CampusDish URL
     NSString *date = [f stringFromDate: beginningOfWeek];
     
-    [f release];
+    //[f release];
     
     
     
@@ -125,7 +129,7 @@
     NSInteger weekday = [weekdayComponents weekday];
     // weekday 1 = Sunday for Gregorian calendar
     
-    [gregorian release];
+    //[gregorian release];
     
     //Get Current Meal
     NSMutableArray *arrTemp = [[NSMutableArray alloc] init];//Temporary array used to fill the dictionary with Menu Items
@@ -255,12 +259,12 @@
     
     //set dictionary to created Dictionary
     self.tableContents =temp;
-    [temp release];
+    //[temp release];
     
     //configure keys (breakfast/lunch/dinner)
     self.sortedKeys = [[NSArray alloc] initWithObjects: whatMeal, nil];
     
-    [arrTemp release];
+    //[arrTemp release];
     
 }
 
@@ -312,7 +316,7 @@ titleForHeaderInSection:(NSInteger)section
     
     //If cell is null allocate a cell with identifier from UIBuilder
     if(cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
     
     NSUInteger row = [indexPath row];
@@ -389,11 +393,228 @@ titleForHeaderInSection:(NSInteger)section
      //to push the UIView.
      [self.navigationController pushViewController:myViewController animated:YES];
      */
+    if ([self.view viewWithTag:9]) {
+        return;
+    }
+    CGRect toolbarTargetFrame = CGRectMake(0, self.view.bounds.size.height-216-44, 320, 44);
+    CGRect datePickerTargetFrame = CGRectMake(0, self.view.bounds.size.height-216, 320, 216);
+    
+    UIView *darkView = [[UIView alloc] initWithFrame:self.view.bounds];
+    darkView.alpha = 0;
+    darkView.backgroundColor = [UIColor blackColor];
+    darkView.tag = 9;
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissDatePicker:)];
+    [darkView addGestureRecognizer:tapGesture];
+    [self.view addSubview:darkView];
+    /*
+    UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, 320, 216)];
+    datePicker.tag = 10;
+    [datePicker addTarget:self action:@selector(changeDate:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:datePicker];
+    */
+    
+    UIPickerView *dPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, 320, 216)];
+    dPicker.tag = 10;
+    [dPicker setDataSource:self];
+    [dPicker setDelegate:self];
+    dPicker.showsSelectionIndicator = YES;
+    //dPicker
+    //[dPicker addTarget:self action:@selector(changeDate:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:dPicker];
+    
+    
+    UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, 320, 44)];
+    toolBar.tag = 11;
+    toolBar.barStyle = UIBarStyleBlackTranslucent;
+    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissDatePicker:)];
+    
+    [toolBar setItems:[NSArray arrayWithObjects:spacer, doneButton, nil]];
+    [self.view addSubview:toolBar];
+    
+    [UIView beginAnimations:@"MoveIn" context:nil];
+    toolBar.frame = toolbarTargetFrame;
+    dPicker.frame = datePickerTargetFrame;
+    darkView.alpha = 0.5;
+    [UIView commitAnimations];
+    
+}
+
+- (void)removeViews:(id)object {
+    [[self.view viewWithTag:9] removeFromSuperview];
+    [[self.view viewWithTag:10] removeFromSuperview];
+    [[self.view viewWithTag:11] removeFromSuperview];
+}
+
+- (void)dismissDatePicker:(id)sender {
+    CGRect toolbarTargetFrame = CGRectMake(0, self.view.bounds.size.height, 320, 44);
+    CGRect datePickerTargetFrame = CGRectMake(0, self.view.bounds.size.height+44, 320, 216);
+    [UIView beginAnimations:@"MoveOut" context:nil];
+    [self.view viewWithTag:9].alpha = 0;
+    [self.view viewWithTag:10].frame = datePickerTargetFrame;
+    [self.view viewWithTag:11].frame = toolbarTargetFrame;
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(removeViews:)];
+    [UIView commitAnimations];
+    
+    //NSLog([todayMain description]);
+    [self setDictionary:todayMain];
+    [self.tableView reloadData];
+}
+
+// Number of components.
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    return 2;
+}
+
+// Total rows in our component.
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+    if (component == 0) {
+        return 7;
+    }
+    return 3;
+}
+
+// Display each row's data.
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+    if(component == 0){
+    if (row == 0) {
+        return @"Today";
+    }else if (row == 1) {
+        return @"Tomorrow";
+    }else if (row == 2){
+        NSDate *now = [NSDate date];
+        int daysToAdd = 2;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        return [self dayOfWeek:newDate1];
+    }else if (row == 3){
+        NSDate *now = [NSDate date];
+        int daysToAdd = 3;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        return [self dayOfWeek:newDate1];
+    }else if (row == 4){
+        NSDate *now = [NSDate date];
+        int daysToAdd = 4;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        return [self dayOfWeek:newDate1];
+    }else if (row == 5){
+        NSDate *now = [NSDate date];
+        int daysToAdd = 5;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        return [self dayOfWeek:newDate1];
+    }else if (row == 6){
+        NSDate *now = [NSDate date];
+        int daysToAdd = 6;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        return [self dayOfWeek:newDate1];
+    }
+    }else if(component == 1){
+        if(row == 0){
+            return @"Breakfast";
+        }else if(row == 1){
+            return @"Lunch";
+        }else if(row == 2){
+            return @"Dinner";
+        }
+    }
+    return @"hello";
+}
+
+//finds the string day of the week value
+-(NSString *)dayOfWeek:(NSDate*)theDay{
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    
+    NSDateComponents *weekdayComponents =[gregorian components:NSWeekdayCalendarUnit fromDate:theDay];
+    
+    NSInteger weekday = [weekdayComponents weekday];
+    // weekday 1 = Sunday for Gregorian calendar
+    
+    if (weekday == 1) {
+        return @"Sunday";
+    }else if(weekday == 2){
+        return @"Monday";
+    }else if(weekday == 3){
+        return @"Tuesday";
+    }else if(weekday == 4){
+        return @"Wednesday";
+    }else if(weekday == 5){
+        return @"Thursday";
+    }else if(weekday == 6){
+        return @"Friday";
+    }else if(weekday == 7){
+        return @"Saturday";
+    }
+    
+    return @"Sunday";
+}
+
+// Do something with the selected row.
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    //NSLog(@"You selected this: %@", [dataArray objectAtIndex: row]);
+    if(component == 0){
+    if (row == 0) {
+        NSDate *now = [[NSDate date] copy];
+        todayMain = now;
+    }else if (row == 1) {
+        NSDate *now = [[NSDate date] copy];
+        int daysToAdd = 1;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        todayMain = newDate1;
+    }else if (row == 2){
+        NSDate *now = [[NSDate date] copy];
+        int daysToAdd = 2;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        todayMain = newDate1;
+    }else if (row == 3){
+        NSDate *now = [[NSDate date] copy];
+        int daysToAdd = 3;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        todayMain = newDate1;
+    }else if (row == 4){
+        NSDate *now = [[NSDate date] copy];
+        int daysToAdd = 4;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        todayMain = newDate1;
+    }else if (row == 5){
+        NSDate *now = [[NSDate date] copy];
+        int daysToAdd = 5;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        todayMain = newDate1;
+    }else if (row == 6){
+        NSDate *now = [[NSDate date] copy];
+        int daysToAdd = 6;
+        NSDate *newDate1 = [now dateByAddingTimeInterval:60*60*24*daysToAdd];
+        todayMain = newDate1;
+    }
+    }else if(component == 1){
+        if (row == 0) {
+            NSCalendar *gregorianTime = [[NSCalendar alloc] initWithCalendarIdentifier: NSGregorianCalendar];
+            NSDateComponents *components1 = [gregorianTime components: NSUIntegerMax fromDate: todayMain];//components for breakfast (7am)
+            [components1 setHour: 7];
+            [components1 setMinute: 0];
+            
+            todayMain = [gregorianTime dateFromComponents: components1];
+        }else if (row == 1) {
+            NSCalendar *gregorianTime = [[NSCalendar alloc] initWithCalendarIdentifier: NSGregorianCalendar];
+            NSDateComponents *components1 = [gregorianTime components: NSUIntegerMax fromDate: todayMain];//components for lunch (11am)
+            [components1 setHour: 11];
+            [components1 setMinute: 0];
+            
+            todayMain = [gregorianTime dateFromComponents: components1];
+        }else if (row == 2){
+            NSCalendar *gregorianTime = [[NSCalendar alloc] initWithCalendarIdentifier: NSGregorianCalendar];
+            NSDateComponents *components1 = [gregorianTime components: NSUIntegerMax fromDate: todayMain];//components for dinner (5pm)
+            [components1 setHour: 17];
+            [components1 setMinute: 0];
+            
+            todayMain = [gregorianTime dateFromComponents: components1];
+        }
+    }
 }
 
 /*
  Deallocate member variables
- */
+ 
 - (void)dealloc
 {
     [_datePicker release];
@@ -406,4 +627,5 @@ titleForHeaderInSection:(NSInteger)section
     [_objects release];
     [super dealloc];
 }
+ */
 @end

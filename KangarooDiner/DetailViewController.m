@@ -22,8 +22,8 @@
 - (void)setDetailItem:(NSURL*)newDetailItem
 {
     if (_detailItem != newDetailItem) {
-        [_detailItem release];
-        _detailItem = [newDetailItem retain];
+        //[_detailItem release];
+        _detailItem = newDetailItem;
         
         // Update the view.
         [self configureView];
@@ -85,7 +85,7 @@
 
 /*
  Deallocate member variables
- */
+ 
 - (void)dealloc
 {
     [_detailItem release];
@@ -94,4 +94,5 @@
     [_masterPopoverController release];
     [super dealloc];
 }
+ */
 @end

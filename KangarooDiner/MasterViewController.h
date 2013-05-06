@@ -12,7 +12,7 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController
+@interface MasterViewController : UITableViewController <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 
@@ -25,6 +25,7 @@
 
 //todays date/time
 @property (nonatomic,retain) NSDate *todayMain;
+@property (nonatomic,retain) NSDate *mealChosen;
 - (IBAction)valueChanged:(id)sender;
 
 

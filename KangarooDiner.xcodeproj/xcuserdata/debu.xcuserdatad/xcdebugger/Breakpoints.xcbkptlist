@@ -13,8 +13,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "358"
          endingLineNumber = "358"
-         landmarkName = "-dealloc"
-         landmarkType = "5">
+         landmarkName = "@implementation DateViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -39,19 +39,6 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "136"
          endingLineNumber = "136"
-         landmarkName = "-setDictionary:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "KangarooDiner/MasterViewController.m"
-         timestampString = "374563836.61703"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "64"
-         endingLineNumber = "64"
          landmarkName = "-setDictionary:"
          landmarkType = "5">
       </FileBreakpoint>
